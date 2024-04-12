@@ -194,6 +194,7 @@ function moveItem (event) {
 
 // 캐릭터와 아이템이 맞닿으면 아이템이 사라지는 함수 등록
 function itemMatching () { 
+    console.log('아이템이 사라지는 함수를 호출합니다.');
     for (let i = 0; i < item.length; i++) { // 아이템의 총 갯수만큼 반복 
         if (parseInt(character.offsetLeft) < parseInt(item[i].offsetLeft) + parseInt(item[i].offsetWidth) // 'item'이 캐릭터를 완전히 지나치면 안된다.(캐릭터의 뒷부분과 조금이라도 닿아야 한다.)
             && parseInt(character.offsetLeft) + parseInt(character.offsetWidth) > parseInt(item[i].offsetLeft) // 'item'이 캐릭터의 맨 앞부분과 닿으면 삭제 
@@ -211,7 +212,7 @@ function itemMatching () {
 
 // 아이템이 사라지는 함수를 0.1초마다 반복하는 함수를 등록하고 맨 상단에 먼저 호출시킨다.
 function repeatItemMatching () {
-    let intervalStop = setInterval(itemMatching, 100); // 반복해서 아이템이 사라지는 함수를 중지할 땐 'intervalStop' 변수에 저장
+    intervalStop = setInterval(itemMatching, 100); // 전역 변수에 let으로 선언된 '반복 종료' 변수에 'setInterval'을 하나만 사용할 경우 let을 빼고 반복을 적용한다.
 }
 
 // 게임 시작 전 로딩되는 시작 메뉴의 '게임 시작' 버튼의 'click' 이벤트를 적용
@@ -219,6 +220,7 @@ function menuVanish (event) {
     menuContainer.style.display ='none'; // 메뉴창을 숨김 처리
 
     setTimeout(() => { // 함수가 호출이 되고 60초 후에 결과창을 표시, 게임이 종료 되었다는 것을 알림
+        clearInterval(intervalStop); // 아이템이 사라지는 함수를 반복한 것을 종료
         gameResult.style.top = '50%'; // 기존 top 값이 -50%로 되어있어 히든 처리되고 있던 결과창을 아래로 내려서 보이게 함.
         pointResult.innerText = parseInt(point); // 합산된 점수는 숫자로 변환되어 지정된 클래스의 텍스트로 표시되게 함.
     }, 60000); // 60000 = 60초
